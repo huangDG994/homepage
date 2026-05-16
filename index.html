@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>So | 需求考古学家</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --purple: #644dff;
+  --pink: #ff4cd2;
+  --dark: #0f0f0f;
+  --darker: #080808;
+  --warm-gray: #8a8282;
+  --dark-warm-gray: #555;
+  --charcoal: #2d2a2a;
+  --wood: #c4a882;
+  --bg: #ffffff;
+  --card-bg: #f8f8f8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--charcoal);
+  line-height: 1.6;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+/* Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+
+.nav-scrolled { box-shadow: 0 1px 12px rgba(0,0,0,0.06); }
+
+.nav-logo {
+  font-size: 20px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  text-decoration: none;
+  color: var(--dark-warm-gray);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--purple); }
+.nav-links a:hover::after { width: 100%; }
+
+.mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+.mobile-toggle span { width: 24px; height: 2px; background: var(--charcoal); border-radius: 2px; transition: 0.3s; }
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px 24px 80px;
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 40%, #1f1a3a 70%, #0f0f0f 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(100,77,255,0.12) 0%, transparent 70%);
+  top: -200px;
+  right: -200px;
+  pointer-events: none;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,76,210,0.08) 0%, transparent 70%);
+  bottom: -150px;
+  left: -150px;
+  pointer-events: none;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  background: rgba(100,77,255,0.12);
+  border: 1px solid rgba(100,77,255,0.2);
+  color: #b8adff;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 32px;
+  letter-spacing: 0.3px;
+}
+
+.hero-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--pink);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero h1 {
+  font-size: clamp(44px, 8vw, 80px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #ffffff 0%, #c4b8ff 50%, #ffb8e8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero h1 .highlight {
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: clamp(18px, 2.5vw, 28px);
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+  margin-bottom: 16px;
+  letter-spacing: 1px;
+}
+
+.hero-desc {
+  max-width: 560px;
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--purple), #7b66ff);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(100,77,255,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(100,77,255,0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1.5px solid rgba(255,255,255,0.15);
+}
+.btn-outline:hover {
+  border-color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.3);
+  font-size: 12px;
+  letter-spacing: 2px;
+  animation: float 2s ease-in-out infinite;
+}
+
+.scroll-indicator .arrow { width: 20px; height: 20px; border-right: 1.5px solid rgba(255,255,255,0.3); border-bottom: 1.5px solid rgba(255,255,255,0.3); transform: rotate(45deg); }
+
+@keyframes float {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(8px); }
+}
+
+/* Sections general */
+section { padding: 100px 24px; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--purple);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  background: var(--purple);
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.section-sub {
+  font-size: 16px;
+  color: var(--warm-gray);
+  max-width: 600px;
+  line-height: 1.7;
+}
+
+/* About */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.about-text { font-size: 16px; color: var(--dark-warm-gray); line-height: 1.8; }
+.about-text p + p { margin-top: 16px; }
+
+.about-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.highlight-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+.highlight-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  border-color: rgba(100,77,255,0.1);
+}
+
+.highlight-number {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.highlight-label { font-size: 13px; color: var(--warm-gray); font-weight: 500; }
+
+/* Expertise */
+#expertise { background: var(--card-bg); }
+
+.expertise-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.expertise-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 36px 28px;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+
+.expertise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s;
+}
+
+.expertise-card:hover::before { transform: scaleX(1); }
+.expertise-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(100,77,255,0.08); }
+
+.expertise-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba(100,77,255,0.08), rgba(255,76,210,0.08));
+}
+
+.expertise-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+.expertise-card p { font-size: 14px; color: var(--warm-gray); line-height: 1.7; }
+
+/* Results */
+.results-list {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-item {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 28px 32px;
+  border: 1px solid rgba(0,0,0,0.04);
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: all 0.3s;
+}
+
+.result-item:hover { border-color: rgba(100,77,255,0.12); box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+
+.result-number {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--purple);
+  white-space: nowrap;
+  min-width: 48px;
+  padding-top: 2px;
+}
+
+.result-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.result-content p { font-size: 14px; color: var(--warm-gray); line-height: 1.7; }
+
+/* Current Projects */
+#current { background: var(--card-bg); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.project-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: all 0.3s;
+}
+
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+
+.project-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.status-active { background: rgba(100,77,255,0.1); color: var(--purple); }
+.status-stalled { background: rgba(255,76,210,0.1); color: var(--pink); }
+
+.project-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+.project-card p { font-size: 14px; color: var(--warm-gray); line-height: 1.7; }
+
+/* Goals */
+#goals {
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #0f0f0f 100%);
+  color: #fff;
+}
+
+#goals .section-label { color: var(--pink); }
+#goals .section-label::before { background: var(--pink); }
+#goals .section-sub { color: rgba(255,255,255,0.5); }
+
+.goals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.goal-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+  transition: all 0.3s;
+}
+.goal-card:hover {
+  background: rgba(255,255,255,0.07);
+  transform: translateY(-4px);
+}
+
+.goal-emoji { font-size: 36px; margin-bottom: 16px; }
+.goal-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.goal-card p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.7; }
+
+/* Principles */
+.principles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.principle-item {
+  background: var(--card-bg);
+  border-radius: 14px;
+  padding: 20px 24px;
+  border-left: 3px solid var(--purple);
+  font-size: 14px;
+  color: var(--dark-warm-gray);
+  line-height: 1.7;
+}
+
+.principle-item strong { color: var(--charcoal); }
+
+/* Pitfalls */
+#pitfalls { background: var(--card-bg); }
+.pitfalls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 48px;
+}
+.pitfall-item {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 24px;
+  border: 1px solid rgba(0,0,0,0.04);
+  font-size: 14px;
+  color: var(--dark-warm-gray);
+  line-height: 1.7;
+}
+
+/* Contact */
+#contact { text-align: center; }
+
+.contact-box {
+  max-width: 500px;
+  margin: 48px auto 0;
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 40px;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 0;
+  font-size: 15px;
+  color: var(--dark-warm-gray);
+}
+
+.contact-item + .contact-item { border-top: 1px solid rgba(0,0,0,0.04); }
+
+.contact-label { font-weight: 600; color: var(--charcoal); min-width: 60px; }
+.contact-value { color: var(--warm-gray); }
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 40px 24px;
+  font-size: 13px;
+  color: var(--warm-gray);
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .mobile-toggle { display: flex; }
+
+  .nav-links.open {
+    display: flex;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(12px);
+    padding: 24px;
+    gap: 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  }
+
+  .about-grid,
+  .goals-grid { grid-template-columns: 1fr; }
+
+  .expertise-grid,
+  .projects-grid,
+  .pitfalls-grid,
+  .principles { grid-template-columns: 1fr; }
+
+  .about-highlights { grid-template-columns: 1fr 1fr; }
+
+  section { padding: 72px 20px; }
+
+  .result-item { flex-direction: column; gap: 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">So</a>
+  <div class="nav-links" id="navLinks">
+    <a href="#about">关于</a>
+    <a href="#expertise">擅长</a>
+    <a href="#results">成果</a>
+    <a href="#current">在做什么</a>
+    <a href="#goals">目标</a>
+    <a href="#contact">联系</a>
+  </div>
+  <button class="mobile-toggle" id="mobileToggle" aria-label="菜单">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    广东 · 云浮
+  </div>
+  <h1>So</h1>
+  <div class="hero-subtitle">需求考古学家</div>
+  <p class="hero-desc">在混乱的平台规则和数据中找到可复制的盈利路径，把抽象概念翻译成普通人能直接上手的 SOP。</p>
+  <div class="hero-actions">
+    <a href="#about" class="btn btn-primary">了解我 →</a>
+    <a href="#contact" class="btn btn-outline">联系我</a>
+  </div>
+  <div class="scroll-indicator">
+    向下滚动
+    <div class="arrow"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">关于我</div>
+      <h2 class="section-title">主业开叉车，副业搞变现</h2>
+      <p class="section-sub">一个白天在物流中心开叉车、晚上在互联网做需求考古的人。</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>我是 So，坐标广东云浮。白天是物流叉车司机，工作稳定但没什么额外资源。副业在小红书卖虚拟产品，包括表格类和 PPT。</p>
+        <p>我的核心能力不是做内容，而是 <strong>「需求考古」</strong>——在关键词工具、评论区、平台规则的交汇处，找到那些被人忽略的真实需求，然后用 SOP 把它变成可执行的生意。</p>
+        <p>我不擅长视觉、不擅长运营、不擅长客服，但我擅长 <strong>「找到对的方向」</strong>。在别人觉得混乱的地方，我能看见结构。</p>
+      </div>
+      <div class="about-highlights reveal">
+        <div class="highlight-card">
+          <div class="highlight-number">2-3h</div>
+          <div class="highlight-label">每天副业时间</div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-number">¥2w</div>
+          <div class="highlight-label">第一桶金</div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-number">15+</div>
+          <div class="highlight-label">试错产品数</div>
+        </div>
+        <div class="highlight-card">
+          <div class="highlight-number">1</div>
+          <div class="highlight-label">单账号运营</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Expertise -->
+<section id="expertise">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">擅长领域</div>
+      <h2 class="section-title">需求考古与模式解码</h2>
+      <p class="section-sub">在别人看到噪音的地方，我看到信号。</p>
+    </div>
+    <div class="expertise-grid">
+      <div class="expertise-card reveal">
+        <div class="expertise-icon">🔍</div>
+        <h3>需求考古</h3>
+        <p>用关键词工具 + 评论区交叉验证，找到低竞争虚拟产品需求。在平台规则和数据中发现可复制的盈利路径。</p>
+      </div>
+      <div class="expertise-card reveal">
+        <div class="expertise-icon">🧩</div>
+        <h3>模式解码</h3>
+        <p>理解特定职业人群的工作周期与消费节律，把抽象需求拆解为可执行的落地步骤。</p>
+      </div>
+      <div class="expertise-card reveal">
+        <div class="expertise-icon">📋</div>
+        <h3>SOP 构建</h3>
+        <p>将碎片化的经验和复盘成果，重构为可复现、可教给别人的 Standard Operating Procedure。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section id="results">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">过往成果</div>
+      <h2 class="section-title">拿到的结果与踩过的坑</h2>
+      <p class="section-sub">每一个结果背后，都有不止一个失败的故事。</p>
+    </div>
+    <div class="results-list">
+      <div class="result-item reveal">
+        <div class="result-number">01</div>
+        <div class="result-content">
+          <h3>淘宝蓝海第一桶金</h3>
+          <p>从完全听不懂"蓝海产品"概念，到反复听课掌握选品逻辑。尝试十几个产品后跑出一个，赚到约 2 万元——网上学习赚钱以来的第一笔资金。</p>
+        </div>
+      </div>
+      <div class="result-item reveal">
+        <div class="result-number">02</div>
+        <div class="result-content">
+          <h3>小红书教师虚拟产品</h3>
+          <p>通过千帆关键词规划工具找到「谈心谈话记录表」等教师需求，AI 洗稿后上架，几天内出单。后续用同样方法找到多个需求持续出单，并发现教师群体秋季下半学期转化特别高的规律。</p>
+        </div>
+      </div>
+      <div class="result-item reveal">
+        <div class="result-number">03</div>
+        <div class="result-content">
+          <h3>跑通「找词→验证→洗稿→上架」完整 SOP</h3>
+          <p>形成了一套可复用的方法论体系，同时积累了十几个产品的失败案例库，知道哪些词是伪需求、哪些受时效性限制。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Current Projects -->
+<section id="current">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">正在做的事</div>
+      <h2 class="section-title">当前推进的项目</h2>
+      <p class="section-sub">用已有的方法论，向更稳定的收入模式前进。</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <span class="project-status status-active">进行中</span>
+        <h3>小红书教师虚拟产品（表格类目）</h3>
+        <p>单账号能出单，但笔记更新极不稳定。卡在手搓笔记效率低、平台规则改变后容易判定重复发布，导致严重拖延。</p>
+      </div>
+      <div class="project-card reveal">
+        <span class="project-status status-stalled">基本停滞</span>
+        <h3>主题班会 PPT 账号</h3>
+        <p>教师人群已验证有效，但 PPT 需要审美能力。逻辑型方法论无法迁移到视觉创作，做不出高赞笔记的视觉效果。已基本放弃。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Goals -->
+<section id="goals">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">目标与方向</div>
+      <h2 class="section-title" style="color:#fff;">我想去的地方</h2>
+      <p class="section-sub">在每天 2-3 小时、单账号、轻运营的前提下，建立不依赖重运营的"解码型"收入模式。</p>
+    </div>
+    <div class="goals-grid">
+      <div class="goal-card reveal">
+        <div class="goal-emoji">🎯</div>
+        <h3>3 个月目标</h3>
+        <p>副业月收入稳定在 3000-5000 元。在小红书虚拟产品赛道跑通可持续的单账号模型。</p>
+      </div>
+      <div class="goal-card reveal">
+        <div class="goal-emoji">🧠</div>
+        <h3>产品化方法论</h3>
+        <p>探索把「找需求的方法论」变成可售产品——选品情报或需求验证 SOP，卖给同样有副业需求但时间少的人群。</p>
+      </div>
+      <div class="goal-card reveal">
+        <div class="goal-emoji">🔓</div>
+        <h3>长期愿景</h3>
+        <p>建立不依赖重运营、不依赖多账号矩阵的「解码型」收入模式。靠洞察赚钱，而不是靠堆时间。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Principles -->
+<section id="principles">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">我的信条</div>
+      <h2 class="section-title">在失败中长出来的认知</h2>
+      <p class="section-sub">踩过的坑才是真正的壁垒。</p>
+    </div>
+    <div class="principles">
+      <div class="principle-item reveal">
+        <strong>做「找词+验证需求」时最投入</strong>——虽然过程枯燥但容易进入心流，说明这就是我的优势区域。
+      </div>
+      <div class="principle-item reveal">
+        <strong>洗稿和上架最不耗能</strong>——流程化工作是我的舒适区，应该尽量把一切变成流程。
+      </div>
+      <div class="principle-item reveal">
+        <strong>极其讨厌发笔记和做内容</strong>——手搓效率低、长期重复让人想拖延。需要找到系统化解决方案。
+      </div>
+      <div class="principle-item reveal">
+        <strong>对别人的成功不嫉妒</strong>——因为知道大家都是"捡面包屑"整合出自己的方法论。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pitfalls -->
+<section id="pitfalls">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">踩过的坑</div>
+      <h2 class="section-title">放弃也是信息</h2>
+      <p class="section-sub">知道什么不做，和知道做什么一样重要。</p>
+    </div>
+    <div class="pitfalls-grid">
+      <div class="pitfall-item reveal">🚫 淘宝蓝海：跑出一个产品后长时间找不到第二个，且平台规则对新手越来越不友好</div>
+      <div class="pitfall-item reveal">🚫 小红书批量铺品：尝试十几个产品，大部分没跑出来——复盘发现是时效性问题</div>
+      <div class="pitfall-item reveal">🚫 小红书 PPT 赛道：人群验证有效，但优势在逻辑不在视觉，方法论无法迁移</div>
+      <div class="pitfall-item reveal">🚫 知识付费/教别人：觉得结果不够大而停留在想法阶段，未实际启动</div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="section-label">联系我</div>
+      <h2 class="section-title">找到 So</h2>
+      <p class="section-sub" style="margin:0 auto;">如果你也在做副业、找需求，或者单纯想交流，欢迎来聊聊。</p>
+    </div>
+    <div class="contact-box reveal">
+      <div class="contact-item">
+        <span class="contact-label">📕 小红书</span>
+        <span class="contact-value">So 的副业笔记</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">📍 坐标</span>
+        <span class="contact-value">广东 · 云浮</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">⏰ 活跃</span>
+        <span class="contact-value">工作日晚上 &amp; 周末</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 So · 需求考古学家</p>
+</footer>
+
+<script>
+// Scroll reveal
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// Navbar scroll effect
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('nav-scrolled', window.scrollY > 50);
+});
+
+// Mobile menu
+const toggle = document.getElementById('mobileToggle');
+const navLinks = document.getElementById('navLinks');
+toggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+
+// Close mobile menu on link click
+navLinks.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+</script>
+</body>
+</html>
